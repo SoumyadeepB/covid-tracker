@@ -1,25 +1,68 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
+import CardDeck from "react-bootstrap/CardDeck";
+import Countries from "./Components/Countries";
+import "./App.css";
 
 function App() {
+  const [current, setCurrent] = useState([]);
+  const [countryData, setCountryData] = useState([]);
+
+  // Performs the effect(API Call) after each Render
+  useEffect(() => {
+    axios.all([
+      axios.get("https://corona.lmao.ninja/v2/all"),
+      axios.get("https://corona.lmao.ninja/v2/countries")
+    ]).
+      then(resArr => {
+        setCurrent(resArr[0].data);
+        setCountryData(resArr[1].data);
+      }).
+      catch(err => {
+        console.log(err);
+      });
+
+  });
+
+  var date = new Date(parseInt(current.updated));
+  var lastUpdated = date.toString();
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container fluid>
+      <CardDeck className="text-center" className="cards">
+        <Card bg="dark" text="white" >
+          <Card.Body>
+            <Card.Title>Cases</Card.Title>
+            <Card.Text>{current.cases}</Card.Text>
+          </Card.Body>
+          <Card.Footer>
+            <small>Last updated on {lastUpdated}</small>
+          </Card.Footer>
+        </Card>
+        <Card bg="success" text="white">
+          <Card.Body>
+            <Card.Title>Recovered</Card.Title>
+            <Card.Text>{current.recovered}</Card.Text>
+          </Card.Body>
+          <Card.Footer>
+            <small>Last updated on {lastUpdated}</small>
+          </Card.Footer>
+        </Card>
+        <Card bg="danger" text="white">
+          <Card.Body>
+            <Card.Title>Deaths</Card.Title>
+            <Card.Text>{current.deaths}</Card.Text>
+          </Card.Body>
+          <Card.Footer>
+            <small>Last updated on {lastUpdated}</small>
+          </Card.Footer>
+        </Card>
+      </CardDeck>
+      <Countries countryData={countryData} />
+    </Container>
   );
 }
 
