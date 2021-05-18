@@ -1,3 +1,9 @@
+# Covid-19 Live Status Tracker
+
+
+## Application Screenshot
+
+![image](https://user-images.githubusercontent.com/12089275/118576469-e1ffb900-b788-11eb-9dea-ecfb6397b8bb.png)
 
 ## Available Scripts
 
